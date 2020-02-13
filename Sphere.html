@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>three.js webgl - loader - ImageBitmap</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <link type="text/css" rel="stylesheet" href="main.css" />
+  </head>
+  <style>
+    body {
+      margin: 00;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <body>
+    <script src="build/three.min.js"></script>
+    <script src="build/threex.domevents.js"></script>
+    <script src="examples/js/controls/OrbitControls.js"></script>
+    <script>
+      // CAMERA
+      camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        1,
+        1500
+      );
+      camera.position.set(0, 0, 100);
+
+      // SCENE
+
+      scene = new THREE.Scene();
+
+      // RENDERER
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setClearColor("#40bfce");
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // EVENTS
+
+      window.addEventListener("resize", () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      });
+
+      // var geometry = new THREE.SphereGeometry(4, 10, 10);
+      // var material = new THREE.MeshNormalMaterial({ wireframe: true });
+      // var sphere = new THREE.Mesh(geometry, material);
+      // scene.add(sphere);
+
+      // Geometry
+      var x = 0,
+        y = 0;
+
+      var heartShape = new THREE.Shape();
+
+      heartShape.moveTo(x + 5, y + 5);
+      heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
+      heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
+      heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
+      heartShape.bezierCurveTo(x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7);
+      heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
+      heartShape.bezierCurveTo(x + 7, y, x + 5, y + 5, x + 5, y + 5);
+
+      var geometry = new THREE.ShapeGeometry(heartShape);
+      var material = new THREE.MeshBasicMaterial({
+        color: 0xf0134d,
+        side: THREE.DoubleSide
+      });
+      var mesh = new THREE.Mesh(geometry, material);
+      mesh.scale.set(0.5, -0.5, 0.5);
+      scene.add(mesh);
+
+      var geometry = new THREE.TorusGeometry(8, 0.5, 16, 100);
+      var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+      var torus = new THREE.Mesh(geometry, material);
+      torus.position.set(0, -15, 0);
+      scene.add(torus);
+
+      // Control
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.minDistance = 1;
+      controls.maxDistance = 1000;
+
+      //Event Listener
+      var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+      let sphereClicked = false;
+      domEvents.addEventListener(mesh, "click", event => {
+        if (!sphereClicked) {
+          material.wireframe = false;
+          sphereClicked = true;
+        } else {
+          material.wireframe = true;
+          sphereClicked = false;
+        }
+      });
+
+      domEvents.addEventListener(mesh, "mouseover", event => {
+        mesh.scale.set(0.8, -0.8, 0.8);
+      });
+
+      domEvents.addEventListener(mesh, "mouseout", event => {
+        mesh.scale.set(0.5, -0.5, 0.5);
+      });
+
+      //Animate
+      var animate = () => {
+        requestAnimationFrame(animate);
+        // sphere.rotation.x += 0.02;
+        // sphere.rotation.y += 0.02;
+        mesh.rotation.y += 0.02;
+        torus.rotation.y += 0.02;
+        controls.update();
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+    </script>
+  </body>
+</html>

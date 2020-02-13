@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+canvas {
+  display: block;
+}
+
+h1 {
+  position: absolute;
+  top: 2em;
+  left: 2em;
+  font-family: "Helvetica";
+  font-size: 3em;
+  text-transform: uppercase;
+  width: 60vw;
+  line-height: 1.8em;
+  border: 5px solid black;
+  padding: 0.5em;
+}
